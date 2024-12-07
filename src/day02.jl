@@ -43,4 +43,4 @@ function solve(lines::Vector{String})
 end
 
 @test solve(readlines(joinpath(@__DIR__, "../data/test02.txt"))) == (2, 4)
-solve(readlines(joinpath(@__DIR__, "../data/val02.txt")))
+@time solve(readlines(joinpath(@__DIR__, "../data/val02.txt")))

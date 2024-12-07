@@ -19,4 +19,4 @@ function solve(lines::Vector{String})
 end
 
 @test solve(readlines(joinpath(@__DIR__, "../data/test01.txt"))) == (11, 31)
-solve(readlines(joinpath(@__DIR__, "../data/val01.txt")))
+@time solve(readlines(joinpath(@__DIR__, "../data/val01.txt")))

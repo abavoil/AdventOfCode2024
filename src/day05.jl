@@ -22,5 +22,3 @@ end
 
 @test solve(readlines(joinpath(@__DIR__, "../data/test05.txt"))) == (143, 123)
 @time solve(readlines(joinpath(@__DIR__, "../data/val05.txt")))
-
-lines = readlines(joinpath(@__DIR__, "../data/test05.txt"))

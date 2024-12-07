@@ -41,4 +41,4 @@ end
 
 @test solve(readlines(joinpath(@__DIR__, "../data/test03a.txt"))) == (161, 161)
 @test solve(readlines(joinpath(@__DIR__, "../data/test03b.txt"))) == (161, 48)
-solve(readlines(joinpath(@__DIR__, "../data/val03.txt")))
+@time solve(readlines(joinpath(@__DIR__, "../data/val03.txt")))

@@ -1,4 +1,5 @@
 using Test
+using LinearAlgebra: diagm
 
 function count_kernels(mat, kernels)
     count = 0
@@ -6,8 +7,8 @@ function count_kernels(mat, kernels)
         bitkernel = kernel .> 0
         for i in 1:(size(mat, 1) - size(kernel, 1) + 1)
             for j in 1:(size(mat, 2) - size(kernel, 2) + 1)
-                loc_mat = mat[i:i+size(kernel, 1)-1, j:j+size(kernel, 2)-1]
-                if all(.!bitkernel .|| (loc_mat .== kernel))
+                loc_mat = @view mat[i:i+size(kernel, 1)-1, j:j+size(kernel, 2)-1]
+                if all(.!bitkernel .| (loc_mat .== kernel))
                     count += 1
                 end
             end
@@ -43,10 +44,4 @@ function solve(lines::Vector{String})
 end
 
 @test solve(readlines(joinpath(@__DIR__, "../data/test04.txt"))) == (18, 9)
-solve(readlines(joinpath(@__DIR__, "../data/val04.txt")))
-
-kernel10 = lines2mat(["M.S", ".A.", "M.S"]) .|> x -> ifelse(x < 0, 0, x) # >
-kernel11 = permutedims(kernel10) # v
-kernel12 = reverse(kernel10)     # <
-kernel13 = reverse(kernel11)     # ^
-
+@time solve(readlines(joinpath(@__DIR__, "../data/val04.txt")))

@@ -29,7 +29,7 @@ function simulate_room!(visited, obstacles, start_pos, start_dir_i, directions, 
             curr_pos = next_pos
         end
     end
-    return (sum(any(visited, dims=3)), looped)
+    return looped
 end
 
 function solve(lines::Vector{String})
@@ -43,7 +43,8 @@ function solve(lines::Vector{String})
     start_dir_i = findfirst(directions .== room[start_pos])
     visited = falses(size(obstacles)..., length(directions))
     
-    sol1 = simulate_room!(visited, obstacles, start_pos, start_dir_i, directions, dir_to_ind)[1]
+    simulate_room!(visited, obstacles, start_pos, start_dir_i, directions, dir_to_ind)
+    sol1 = sum(any(visited, dims=3))
     
     sol2 = 0
     potential_obstructions = any(visited, dims=3)
@@ -52,7 +53,7 @@ function solve(lines::Vector{String})
         obstructed_obstacles = copy(obstacles)
         obstructed_obstacles[obstruction] = true
     
-        sol2 += simulate_room!(visited, obstructed_obstacles, start_pos, start_dir_i, directions, dir_to_ind)[2]
+        sol2 += simulate_room!(visited, obstructed_obstacles, start_pos, start_dir_i, directions, dir_to_ind)
     end
     return sol1, sol2
 end
