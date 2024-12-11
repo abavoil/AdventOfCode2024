@@ -12,7 +12,6 @@ function count_stones(cache, stone, blinks)
     end
     return cache[(stone, blinks)] = nb_stones
 end
-count_stones(arrangement, blinks) = sum(count_stones(Dict{Tuple{Int64, Int64}, Int64}(), stone, blinks) for stone in arrangement)
 
 function solve(lines::Vector{String})
     initial_arrangement = parse.(Int64, split(only(lines), " "))
@@ -23,4 +22,4 @@ function solve(lines::Vector{String})
 end
 
 @test solve(readlines(joinpath(@__DIR__, "../data/test11.txt")))[1] == 55312
-@time solve(readlines(joinpath(@__DIR__, "../data/test11.txt")))
+@time solve(readlines(joinpath(@__DIR__, "../data/val11.txt")))
