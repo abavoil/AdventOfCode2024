@@ -1,40 +1,34 @@
 using Test
 
-function search_trails!(trails, mat, n, m, i0, j0, height, i, j)
-    if !(1 <= i <= n && 1 <= j <= m)
-        return nothing
-    end
-    if mat[i, j] != height
-        return nothing
-    end
-    if mat[i, j] == 9
-        trail = ((i0, j0, i, j))
-        if haskey(trails, trail)
-            trails[trail] += 1
-        else
-            trails[trail] = 1
-        end
-        return nothing
-    end
-    for (k, l) in ((i-1, j), (i+1, j), (i, j-1), (i, j+1))
-        search_trails!(trails, mat, n, m, i0, j0, height + 1, k, l)
-    end
-end
+function accessible_9s(heads, mem, mem_val0, mat, n, m, height, i, j)
+    if !(1 <= i <= n && 1 <= j <= m) || mat[i, j] != height return mem_val0 end
+    if height == 9 return Dict((i, j) => 1) end
 
-function search_trails(mat)
-    trails = Dict{Tuple{Int64, Int64, Int64, Int64}, Int64}()
-    n, m = size(mat)
-    for i in 1:n, j in 1:m
-        search_trails!(trails, mat, n, m, i, j, 0, i, j)
+    if height == 0 push!(heads, (i, j)) end
+    return get!(mem, (i, j)) do
+        # # Introduces **RUNTIME DISPATCH**
+        # reduce((d1, d2) -> mergewith(+, d1, d2), (accessible_9s(heads, mem, mem_val0, mat, n, m, height+1, k, l) for (k, l) in ((i-1, j), (i+1, j), (i, j-1), (i, j+1))))
+        mem_val = copy(mem_val0)
+        for (k, l) in ((i-1, j), (i+1, j), (i, j-1), (i, j+1))
+            for (nine_pos, count) in accessible_9s(heads, mem, mem_val0, mat, n, m, height+1, k, l)
+                mem_val[nine_pos] = get!(mem_val, nine_pos, 0) + count
+            end
+        end
+        mem[(i, j)] = mem_val
     end
-    return trails
 end
 
 function solve(lines::Vector{String})
     mat = permutedims(mapreduce(l -> parse.(Int64, l), hcat, collect.(lines)))
-    trails = search_trails(mat)
-    sol1 = length(trails)
-    sol2 = sum(values(trails))
+    heads = Tuple{Int64, Int64}[]
+    mem = Dict{Tuple{Int64, Int64}, Dict{Tuple{Int64, Int64}, Int64}}()
+    mem_val0 = valtype(mem)()
+    n, m = size(mat)
+    for i in 1:n, j in 1:m
+        accessible_9s(heads, mem, mem_val0, mat, n, m, 0, i, j)
+    end
+    sol1 = sum(length(mem[h]) for h in heads)
+    sol2 = sum(sum(values(mem[h])) for h in heads)
     return sol1, sol2
 end
 
