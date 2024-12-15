@@ -27,7 +27,7 @@ function solve(lines::Vector{String})
     region = falses(size(mat)...)
     for i in axes(mat, 1), j in axes(mat, 2)
         if explored[i, j] continue end
-        # @debug "\n[Region i=$i, j=$j]\n" * compact_string(region, Int)
+        # @debug "\n[Region i=$i, j=$j]\n" * arr2str(region, Int)
         region .= falses(size(mat)...)
         explore_region(mat, region, n, m, mat[i, j], i, j)
         surface = sum(region)
@@ -38,7 +38,7 @@ function solve(lines::Vector{String})
         # nb_edges = 0
         # for (k, w) in zip(vertex_kernels, vertex_weights)
         #     corr = correlate_eigsum(region, Bool.(k); weights = Bool.(w), map_f = !⊻, reduce_f = &, weight_f = (w, val) -> !w | val)
-        #     @debug "\n[Kernel]\n" * compact_string(k, Int) * "\n[Weights]\n" * compact_string(w, Int) * "\n[Result]\n" * compact_string(corr, Int)
+        #     @debug "\n[Kernel]\n" * arr2str(k, Int) * "\n[Weights]\n" * arr2str(w, Int) * "\n[Result]\n" * arr2str(corr, Int)
         #     nb_edges += sum(corr)
         # end
         perimeter = sum(sum(correlate_loops(region, Bool.(k); map_f = !⊻, reduce_f = &)) for k in edge_kernels)

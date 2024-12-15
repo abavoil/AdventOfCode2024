@@ -30,7 +30,7 @@ function compute_room!(room::AbstractArray{Bool}, room_size, robots, n)
 end
 
 function room_to_string(room)
-    compact_string(room, x -> ifelse(x == 0, ".", "#"))
+    arr2str(room, x -> ifelse(x == 0, ".", "#"))
 end
 
 function solve(lines::Vector{String}, room_size)
