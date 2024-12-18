@@ -1,7 +1,7 @@
 using Test
 using SparseArrays
 
-# Idea to merge the two solutions : in part 1, make lobstacles = robstacles and sibling = [0, 0]
+# Add a cache to remove allocations!
 
 include("utils.jl")
 
@@ -46,7 +46,7 @@ end
 
 function solve(lines, part2)
     isplit = findfirst(x -> x == "", lines)
-    direction = Dict('^' => [-1, 0], '>' => [0, 1], 'v' => [1, 0], '<' => [0, -1])
+    directions = Dict('^' => [-1, 0], '>' => [0, 1], 'v' => [1, 0], '<' => [0, -1])
     moves = join(lines[isplit+1:end])
     
     replacements = ifelse(part2, ('#' => "##", 'O' => "[]", '.' => "..", '@' => "@."), ())
@@ -68,7 +68,7 @@ function solve(lines, part2)
     for (i, char_move) in enumerate(moves)
         lobstacles_to_move = Set{NTuple{2, Int64}}()
         robstacles_to_move = Set{NTuple{2, Int64}}()
-        move = direction[char_move]
+        move = directions[char_move]
         can_move = can_step!(lobstacles_to_move, robstacles_to_move, is_wall, is_lobstacle, is_robstacle, pos, move, part2)
         if can_move
             pos .+= move

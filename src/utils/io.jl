@@ -16,3 +16,9 @@ function test_arr2str()
     f = x -> ifelse(x == 1, "A", "B")
     @test arr2str(arr, f) == "AB\nBB"
 end
+
+function arr2prettystr(arr, f = x -> x)
+    io = IOBuffer()
+    show(io, "text/plain", f.(arr))
+    return split(String(take!(io)), "\n"; limit=2)[2]
+end

@@ -97,6 +97,7 @@ end
 function correlate_eigsum!(out, A, kernel, padded, indK, indC, eigarr; weights = one.(kernel), stride_ = ntuple(_ -> 1, ndims(A)), padding=0, map_f = *, reduce_f = +, weight_f = *)
     # get rid of CI https://discourse.julialang.org/t/selecting-multiple-elements-of-an-array-by-a-list-of-indices/47483
     # Inds... or to_ind(Inds, stride)
+    # https://docs.julialang.org/en/v1/base/arrays/#Base.to_indices
     @debug "eigsum!", size(weights), size(kernel)
     C, P = out, padded
     @assert all(stride_ .== 1) "Not implemented for stride_ != 1"
