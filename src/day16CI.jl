@@ -29,15 +29,15 @@ end
 function parse_maze(lines, directions)
     State = CI{3}
     mat = permutedims(reduce(hcat, collect.(lines)))
-    is_wall = mat .== '#'
+    iswall = mat .== '#'
     start = findfirst(mat .== 'S')
     goal = findfirst(mat .== 'E')
     costs = Dict{State, Array{Tuple{State, Int}}}()
-    for pos in findall(.!is_wall)
+    for pos in findall(.!iswall)
         for dir in 1:4
             options = Tuple{State, Int}[]
             new_pos = pos + directions[dir]
-            if !is_wall[new_pos]
+            if !iswall[new_pos]
                 push!(options, (CI(new_pos, dir), 1))
             end
             for rot in (-1, 1)

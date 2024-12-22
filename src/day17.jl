@@ -252,11 +252,36 @@ while true
     end
     nb_correct = curr_nb_correct
     A += 1
-    if A > 8^16 println("A > 8^16"); break end
+    if A > 8^17 println("A > 8^16"); break end
 end
-@test is_self_replicating(Computer(cpt, A))
 
+function self_replicating_A(cpt)
+    nb_correct = 0
+    A = 0
+    while true
+        cptA = Computer(cpt, A)
+        run(cptA)
+        for (prog_val, out) in zip(reverse(cptA.prog[1:end-nb_correct]), reverse(cptA.output[1:end-nb_correct]))
+            if prog_val == out
+                nb_correct += 1
+                if nb_correct == 16 return A end
+                @info "$(nb_correct)th correct ('$out') for A = $A"
+                A *= 8
+            end
+        end
+        A += 1
+    end
+end
+
+self_replicating_A(cpt)
+@test is_self_replicating(Computer(cpt, self_replicating_A(cpt)))
+
+
+cptA = Computer(cpt, self_replicating_A(cpt))
+run(cptA)
 # 164279033360034 too high
+
+
 
 
 function try_recusrion()
