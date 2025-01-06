@@ -1,3 +1,5 @@
+# 1314_2321_9977_1624 is too high
+
 import Base.string
 using Logging
 
@@ -188,11 +190,11 @@ function find_A2(cpt, prev_A, nb_correct)
 end
 
 cpt_ = Computer(read(joinpath(@__DIR__, "../data/val17.txt"), String))
-@time A = find_A2(cpt_, 0, 0)[1]
+@time find_A2(cpt_, 0, 0)
 
 
 cpt = Computer(read(joinpath(@__DIR__, "../data/val17.txt"), String))
-is_self_replicating(Computer(cpt, A))
+is_self_replicating(Computer(cpt, 128evalpoly(8, reverse(cpt.prog))))
 
 
 # 2 4 1 1 7 5 1 5 4 0 5 5 0 3 3 0
@@ -300,3 +302,50 @@ end
 self_replicating_A(cpt)
 @test is_self_replicating(Computer(cpt, self_replicating_A(cpt)))
 
+
+"""
+return (A, nb_correct, is_correct)
+"""
+function find_A(cpt, nb_correct)
+    A = cpt.A
+    run(cpt)
+    @show A, nb_correct, cpt.output
+    # @show cpt.output, A
+    if length(cpt.output) >= length(cpt.prog) return (A, cpt.output == cpt.prog) end
+    if cpt.output == cpt.prog[end-nb_correct:end]
+        final_A, reached = find_A(Computer(cpt, 8A), nb_correct+1)
+        if reached return (final_A, true) end
+    end
+    return find_A(Computer(cpt, A+1), nb_correct)
+end
+
+
+function find_A2(cpt, nb_correct)
+    @show cpt.A, nb_correct
+    if nb_correct == length(cpt.prog) return (cpt.A, cpt.prog == cpt.output) end
+    base_A = cpt.A
+    for A in base_A:base_A+2047
+        cptA = Computer(cpt, A)
+        run(cptA)
+        if cptA.output == cptA.prog[end-nb_correct:end]
+            @show A, nb_correct, cptA.output
+            final_A, reached = find_A2(Computer(cptA, 8A), nb_correct+1)
+            if reached return (final_A, true) end
+        end
+    end
+    return (A+2048, false)
+end
+
+
+Computer(cpt, 0)
+length(output) >= length(prog) && return false
+
+prog = cpt.prog
+output = [3, 3, 3, 0]
+
+findlast(prog[end-length(output)+1:end] .!= output)
+
+A = 8^16-1
+cpt = Computer(cpt, A)
+run(cpt)
+length(cpt.output)

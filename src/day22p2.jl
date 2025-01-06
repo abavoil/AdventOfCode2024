@@ -17,6 +17,8 @@ end
 modlist = next.(T(0):MOD_MINUS_1)
 allunique(modlist)
 
+# Cache: n -> (iterations, n^iterations)
+# update: cache[n] = (c_iter, next_n), if interations > c_iter, cache[n] = interations, next_n^(iterations - c_iter)
 function lookup(modlist, n, iterations)
     if iterations == 0
         return n
