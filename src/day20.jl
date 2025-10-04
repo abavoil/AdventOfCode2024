@@ -5,7 +5,7 @@ include("utils.jl")
 const infty = typemax(Int) ÷ 2
 
 
-lines = readlines(joinpath(@__DIR__, "../data/test20.txt"))
+lines = readlines(joinpath(@__DIR__, "../data/val20.txt"))
 
 mat = permutedims(reduce(hcat, collect.(lines)))
 iswall = mat .== '#'
@@ -40,7 +40,7 @@ for start_pos in getfield.(findall(iswall), :I)
         if !checkbounds(Bool, iswall, entry...) || iswall[entry...] continue end
         end_pos = start_pos .+ dir
         time_save = dist[entry...] - 2 - minimum(get(dist, start_pos .+ dir, infty) for dir in directions)
-        @show time_save
+        # @show time_save
         if time_save > 0
             time_saves[time_save] = 1 + get!(time_saves, time_save, 0)
             # improvements[improvement] = (start_pos..., end_pos...) get!(improvements, improvement, [])

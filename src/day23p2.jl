@@ -55,7 +55,7 @@ function find_max_clique2(links, candidates, selected)
 end
 
 
-max_clique_ = [Set{String}()]
+max_clique_ = fill(Set{String}())
 V = Set(keys(links));
 @time BronKerbosch(links, max_clique_, empty(V), V, empty(V));
 println(join(sort(collect(only(max_clique_))), ","))
